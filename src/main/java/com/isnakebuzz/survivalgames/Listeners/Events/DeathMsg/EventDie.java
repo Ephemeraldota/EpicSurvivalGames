@@ -27,8 +27,6 @@ public class EventDie implements Listener {
                 if (plugin.getArenaManager().getArenaPlayer().containsKey(p.getUniqueId())) {
                     Arena arena = plugin.getArenaManager().getArenaPlayer().get(p.getUniqueId());
                     Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> createMessage(arena, e.getEntity(), e.getEntity().getLastDamageCause().getCause()));
-                    EventTag.lastDamager.remove(e.getEntity());
-                    EventTag.lastDmgTime.remove(e.getEntity());
                 }
             }
         }
@@ -54,6 +52,9 @@ public class EventDie implements Listener {
             String message = messageReplaceAndColor(dead, false, null, cause, false);
             print(arena, message);
         }
+
+        EventTag.lastDamager.remove(dead);
+        EventTag.lastDmgTime.remove(dead);
     }
 
     private String messageReplaceAndColor(LivingEntity dead, Boolean inflicted, LivingEntity attacker, EntityDamageEvent.DamageCause cause, Boolean playerAttack) {

@@ -35,9 +35,7 @@ public class EventManager {
             registerListener(new BungeeJoinAndLeave(plugin));
         }
 
-        Bukkit.getScheduler().scheduleAsyncRepeatingTask(plugin, () -> {
-            EventTag.increaseTimers();
-        }, 20, 20);
+        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, EventTag::increaseTimers, 20, 20);
 
         registerListener(new EventSigns(plugin));
         registerListener(new ExtraEvents(plugin));

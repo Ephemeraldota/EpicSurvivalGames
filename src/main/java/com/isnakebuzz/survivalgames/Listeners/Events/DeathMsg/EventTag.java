@@ -29,11 +29,11 @@ public class EventTag implements Listener {
         EventTag.plugin = plugin;
     }
 
-    static boolean getInflicted(final LivingEntity e) {
+    static boolean getInflicted(LivingEntity e) {
         return EventTag.lastDamager.containsKey(e) && EventTag.lastDmgTime.get(e) <= plugin.getConfigUtils().getConfig(plugin, "Settings").getInt("CombatTime");
     }
 
-    static LivingEntity getWho(final LivingEntity e) {
+    static LivingEntity getWho(LivingEntity e) {
         if (EventTag.lastDamager.containsKey(e)) {
             return EventTag.lastDamager.get(e);
         }
@@ -41,12 +41,12 @@ public class EventTag implements Listener {
     }
 
     public static void increaseTimers() {
-        final ArrayList<LivingEntity> entities = new ArrayList<>(EventTag.lastDmgTime.keySet());
-        for (final LivingEntity e : entities) {
+        ArrayList<LivingEntity> entities = new ArrayList<>(EventTag.lastDmgTime.keySet());
+        for (LivingEntity e : entities) {
             if (e.isDead() || !e.isValid()) {
                 EventTag.lastDmgTime.remove(e);
                 EventTag.lastDamager.remove(e);
-            } else if (EventTag.lastDmgTime.get(e) <= plugin.getConfigUtils().getConfig(plugin, "Settings").getInt("CombatTime")) {
+            } else if (EventTag.lastDmgTime.get(e) <= plugin.getConfigUtils().getConfig(plugin, "Settings").getInt("CombatTime") * 1000) {
                 EventTag.lastDmgTime.put(e, EventTag.lastDmgTime.get(e) - 1);
             } else {
                 EventTag.lastDmgTime.remove(e);
@@ -56,19 +56,19 @@ public class EventTag implements Listener {
     }
 
     @EventHandler
-    public void onDamage(final EntityDamageByEntityEvent e) {
+    public void onDamage(EntityDamageByEntityEvent e) {
         if (e.getEntity() instanceof Player) {
             Player p = (Player) e.getEntity();
             if (plugin.getArenaManager().getArenaPlayer().containsKey(p.getUniqueId())) {
                 if (e.getEntity() != null && e.getDamager() != null && e.getEntity() instanceof LivingEntity && e.getDamager() instanceof LivingEntity) {
-                    final LivingEntity attacker = (LivingEntity) e.getDamager();
-                    final LivingEntity damaged = (LivingEntity) e.getEntity();
+                    LivingEntity attacker = (LivingEntity) e.getDamager();
+                    LivingEntity damaged = (LivingEntity) e.getEntity();
                     EventTag.lastDamager.put(damaged, attacker);
                     EventTag.lastDmgTime.put(damaged, 0);
                 } else if (e.getEntity() != null && e.getDamager() != null && e.getDamager() instanceof Projectile && e.getDamager().getCustomName() != null) {
-                    for (final LivingEntity en : e.getDamager().getWorld().getLivingEntities()) {
+                    for (LivingEntity en : e.getDamager().getWorld().getLivingEntities()) {
                         if (en.getEntityId() == Integer.parseInt(e.getDamager().getCustomName())) {
-                            final LivingEntity damaged2 = (LivingEntity) e.getEntity();
+                            LivingEntity damaged2 = (LivingEntity) e.getEntity();
                             EventTag.lastDamager.put(damaged2, en);
                             EventTag.lastDmgTime.put(damaged2, 0);
                         }
@@ -79,7 +79,7 @@ public class EventTag implements Listener {
     }
 
     @EventHandler
-    public void onShoot(final EntityShootBowEvent e) {
+    public void onShoot(EntityShootBowEvent e) {
         if (e.getEntity() instanceof Player) {
             Player p = (Player) e.getEntity();
             if (plugin.getArenaManager().getArenaPlayer().containsKey(p.getUniqueId())) {
@@ -89,12 +89,12 @@ public class EventTag implements Listener {
     }
 
     @EventHandler
-    public void onLaunch(final ProjectileLaunchEvent e) {
+    public void onLaunch(ProjectileLaunchEvent e) {
         if (e.getEntity().getShooter() instanceof Player) {
             Player p = (Player) e.getEntity().getShooter();
             if (plugin.getArenaManager().getArenaPlayer().containsKey(p.getUniqueId())) {
                 if (e.getEntity().getShooter() instanceof LivingEntity) {
-                    final LivingEntity shooter = (LivingEntity) e.getEntity().getShooter();
+                    LivingEntity shooter = (LivingEntity) e.getEntity().getShooter();
                     e.getEntity().setCustomName(Integer.toString(shooter.getEntityId()));
                 }
             }

@@ -178,7 +178,7 @@ public class Arena {
         p.setHealth(p.getMaxHealth());
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
             //p.teleport(getSpectator());
-            PlayerUtils.clean(p, GameMode.ADVENTURE, true, true, true);
+            PlayerUtils.clean(p, GameMode.ADVENTURE, true, true, true, true);
             plugin.getInventories().setSpectInventory(p);
         }, 2);
         this.getSpectPlayers().add(p);
@@ -361,7 +361,7 @@ public class Arena {
     public void addPlayer(Player p) {
         Configuration lang = plugin.getConfigUtils().getConfig(plugin, "Lang");
         p.teleport(this.getLobby());
-        PlayerUtils.clean(p, GameMode.ADVENTURE, false, false, false);
+        PlayerUtils.clean(p, GameMode.ADVENTURE, false, true, false, false);
         this.getGamePlayers().add(p);
         plugin.getArenaManager().getArenaPlayer().put(p.getUniqueId(), this);
         plugin.getScoreBoardAPI().setGameScoreboard(p, ScoreBoardAPI.ScoreboardType.PRELOBBY, false, true, false, this);
@@ -391,16 +391,16 @@ public class Arena {
 
         if (this.getGameStatus().equals(Enums.GameStatus.INGAME) || this.getGameStatus().equals(Enums.GameStatus.RESTARTING)) {
             if (this.getGamePlayers().contains(p)) {
-                PlayerUtils.clean(p, GameMode.SURVIVAL, false, false, false);
+                PlayerUtils.clean(p, GameMode.SURVIVAL, false, true, false, false);
                 this.getGamePlayers().remove(p);
                 plugin.getArenaManager().getArenaPlayer().remove(p.getUniqueId());
             } else if (this.getSpectPlayers().contains(p)) {
-                PlayerUtils.clean(p, GameMode.SURVIVAL, false, false, false);
+                PlayerUtils.clean(p, GameMode.SURVIVAL, false, true, false, false);
                 this.getSpectPlayers().remove(p);
                 plugin.getArenaManager().getArenaPlayer().remove(p.getUniqueId());
             }
         } else {
-            PlayerUtils.clean(p, GameMode.SURVIVAL, false, false, false);
+            PlayerUtils.clean(p, GameMode.SURVIVAL, false, true, false, false);
             this.getGamePlayers().remove(p);
             plugin.getArenaManager().getArenaPlayer().remove(p.getUniqueId());
 
@@ -473,7 +473,7 @@ public class Arena {
     public void teleportToSpawns() {
         int i = 0;
         for (Player p : this.getGamePlayers()) {
-            PlayerUtils.clean(p, GameMode.SURVIVAL, false, false, false);
+            PlayerUtils.clean(p, GameMode.SURVIVAL, false, false, false, false);
             p.teleport(this.getSpawns().get(i));
             if (i < this.getSpawns().size()) {
                 i++;

@@ -88,7 +88,7 @@ public class ArenaCustomEvents implements Listener {
     public void LeftEvent(LeftEvent e) {
         Arena arena = e.getArena();
         arena.removePlayer(e.getPlayer());
-        PlayerUtils.clean(e.getPlayer(), GameMode.SURVIVAL, false, false, false);
+        PlayerUtils.clean(e.getPlayer(), GameMode.SURVIVAL, false, true, false, false);
         arena.getArenaVoteSys().removeFromVotes(e.getPlayer());
     }
 
