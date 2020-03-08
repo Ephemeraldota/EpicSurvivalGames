@@ -8,18 +8,13 @@ import com.isnakebuzz.survivalgames.Main;
 import com.isnakebuzz.survivalgames.Utils.Enums;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
@@ -39,6 +34,17 @@ public class SpectatorEvents implements Listener {
     public void FoodLevelChange(FoodLevelChangeEvent e) {
         if (!(e.getEntity() instanceof Player)) return;
         Player p = (Player) e.getEntity();
+        if (plugin.getArenaManager().getArenaPlayer().containsKey(p.getUniqueId())) {
+            Arena arena = plugin.getArenaManager().getArenaPlayer().get(p.getUniqueId());
+            if (arena.getSpectPlayers().contains(p)) {
+                e.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void playerInteract(PlayerInteractEvent e) {
+        Player p = e.getPlayer();
         if (plugin.getArenaManager().getArenaPlayer().containsKey(p.getUniqueId())) {
             Arena arena = plugin.getArenaManager().getArenaPlayer().get(p.getUniqueId());
             if (arena.getSpectPlayers().contains(p)) {
